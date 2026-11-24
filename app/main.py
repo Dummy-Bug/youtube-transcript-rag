@@ -10,7 +10,7 @@ from app.configs.settings import get_settings
 
 settings = get_settings()
 
-app = FastAPI()
+app = FastAPI(title=settings.app_name)
 
 app.include_router(health_controller.router)
 
