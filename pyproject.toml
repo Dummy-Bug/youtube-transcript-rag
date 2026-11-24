@@ -12,6 +12,7 @@ dependencies = [
     "langchain-qdrant>=0.2.0",
     "langchain-text-splitters>=0.3.0",
     "langsmith==0.4.55",
+    "mypy>=2.4.1",
     "pydantic-settings>=2.6.0",
     "pypdf>=5.0.0",
     "python-docx>=1.1.0",
