@@ -14,7 +14,6 @@ dependencies = [
     "langchain-qdrant>=0.2.0",
     "langchain-text-splitters>=0.3.0",
     "langsmith==0.4.55",
-    "mypy>=2.4.1",
     "pydantic>=2.14.4",
     "pydantic-settings>=2.6.0",
     "pypdf>=5.0.0",
@@ -27,3 +26,10 @@ dependencies = [
     "temporalio>=1.8.0",
     "uvicorn[standard]>=0.32.0",
 ]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+]
+[tool.mypy]
+disallow_untyped_defs = true

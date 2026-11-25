@@ -7,6 +7,6 @@ from app.configs.settings import get_settings
 
 
 @lru_cache
-def get_embedding_client() -> Embeddings:
+def get_embedder() -> Embeddings:
     settings = get_settings()
     return HuggingFaceEmbeddings(model=settings.embedding_model)
