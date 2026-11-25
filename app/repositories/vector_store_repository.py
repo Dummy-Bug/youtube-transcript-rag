@@ -9,11 +9,15 @@ from qdrant_client.models import Distance, VectorParams
 
 from app.configs.settings import get_settings
 from app.services.embedding_service import get_embedder
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 @lru_cache
 def get_qdrant_client() -> QdrantClient:
     setting = get_settings()
+    logger.info(f"Creating Qdrant client for {setting.qdrant_url}")
     return QdrantClient(
         url=setting.qdrant_url,
     )
@@ -41,9 +45,10 @@ class VectorStoreRepository:
     def _ensure_collection(self) -> None:
 
         if self.client.collection_exists(self.collection_name):
+            logger.info(f"Collection {self.collection_name} found")
             return
 
-        print(f"Collection {self.collection_name} not found. Creating...")
+        logger.info(f"Collection {self.collection_name} not found. Creating...")
 
         vector_size = len(get_embedder().embed_query("dimension probe"))
         self.client.create_collection(
@@ -57,11 +62,13 @@ class VectorStoreRepository:
 
         ids = [str(uuid.uuid4()) for _ in documents]
         self.vector_store.add_documents(documents, ids=ids)
+        logger.info(f"Added {len(ids)} documents to {self.collection_name}")
         return ids
 
     def delete_collection(self) -> None:
         self._vector_store = None
         self.client.delete_collection(self.collection_name)
+        logger.info(f"Deleted collection {self.collection_name}")
 
     def search(self, query: str, k: int | None = None) -> list[Document]:
         settings = get_settings()
@@ -78,5 +85,5 @@ class VectorStoreRepository:
             self.client.get_collection(self.collection_name)
             return True
         except Exception as e:
-            print(f"Health check failed: {e}")
+            logger.error(f"Health check failed: {e}")
             return False
